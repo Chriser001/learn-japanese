@@ -67,6 +67,9 @@ self.addEventListener('fetch', event => {
     }
 
     // 处理其他资源请求
+    if (event.request.url.startsWith('chrome-extension://')) {
+        return;
+    }
     event.respondWith(
         caches.match(event.request)
             .then(response => {
