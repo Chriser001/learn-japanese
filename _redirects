@@ -1,0 +1,12 @@
+/dict/cc.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/cc.dat.gz 301
+/dict/base.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/base.dat.gz
+/dict/check.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/check.dat.gz
+/dict/tid_map.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/tid_map.dat.gz
+/dict/tid_pos.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/tid_pos.dat.gz
+/dict/tid.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/tid.dat.gz
+/dict/unk_char.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_char.dat.gz
+/dict/unk_compat.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_compat.dat.gz
+/dict/unk_invoke.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_invoke.dat.gz
+/dict/unk_map.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_map.dat.gz
+/dict/unk_pos.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_pos.dat.gz
+/dict/unk.dat.gz https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk.dat.gz
