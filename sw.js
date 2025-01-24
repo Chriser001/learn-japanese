@@ -57,8 +57,12 @@ self.addEventListener('install', event => {
 // 检查网络连接状态
 async function checkNetworkStatus() {
     try {
-        const response = await fetch('/ping', { method: 'HEAD' });
-        return response.ok;
+        // 使用更可靠的方式检查网络连接
+        const response = await fetch('https://www.apple.com.cn/favicon.ico', {
+            method: 'HEAD',
+            mode: 'no-cors'
+        });
+        return true;
     } catch (error) {
         return false;
     }
@@ -157,12 +161,7 @@ self.addEventListener('fetch', event => {
             const cachedResponse = await caches.match(event.request);
             const isOnline = await checkNetworkStatus();
 
-            // 离线状态直接返回缓存
-            if (!isOnline && cachedResponse) {
-                return cachedResponse;
-            }
-
-            // 在线状态下尝试获取新资源
+            // 在线状态下优先尝试获取新资源
             if (isOnline) {
                 try {
                     const response = await fetch(event.request);
@@ -171,13 +170,25 @@ self.addEventListener('fetch', event => {
                         await cache.put(event.request, response.clone());
                         return response;
                     }
+                    // 如果响应不是 ok，但有缓存，则返回缓存
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
                 } catch (error) {
                     console.log('Fetch failed, falling back to cache:', error);
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
                 }
             }
 
-            // 如果在线获取失败或离线状态，返回缓存
-            return cachedResponse || new Response('Network error', { status: 504 });
+            // 离线状态或请求失败时返回缓存
+            if (cachedResponse) {
+                return cachedResponse;
+            }
+
+            // 只有在没有缓存且无法获取资源时才返回 504
+            return new Response('Network error', { status: 504 });
         })()
     );
 });
