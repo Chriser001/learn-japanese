@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="假名练习">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="stylesheet" href="/css/dictation.css">
+    <title>平假名练习画板</title>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <button id="pencil-btn" title="铅笔">✏️</button>
+            <button id="eraser-btn" title="橡皮">🧽</button>
+            <button id="clear-all-btn" title="清除所有">🔀</button>
+            <button id="show-kana-btn" title="显示假名">⭕️</button>
+        </div>
+        <h1>平假名练习画板</h1>
+        <div class="grid-container" id="grid-container">
+            <!-- 田字格将通过JavaScript动态生成 -->
+        </div>
+        <a href="/" class="practice-link">学写假名</a>
+        <div class="version">ver.0.0.8</div>
+    </div>
+    <script src="/js/dictation.js"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+}
+
+.container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
+    position: relative;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+.grid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.romaji {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+    background-color: #f5f5f5;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.show-kana-btn {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.kana-text {
+    font-size: 18px;
+    color: #666;
+    margin: 5px 0;
+}
+
+.grid-cell {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 2px solid rgba(255, 0, 0, 0.2);
+    background-color: #fff;
+}
+
+.canvas {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    cursor: crosshair;
+    pointer-events: auto;
+    touch-action: none;
+}
+
+.toolbar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.toolbar button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.toolbar button:hover {
+    background-color: #ddd;
+}
+
+.toolbar button.active {
+    background-color: #ccc;
+}
+
+.grid-cell::before,
+.grid-cell::after {
+    content: '';
+    position: absolute;
+    background-color: rgba(255, 0, 0, 0.2);
+    pointer-events: none;
+}
+
+.grid-cell::before {
+    width: 100%;
+    height: 1px;
+    top: 50%;
+    left: 0;
+    border-top: 1px dashed rgba(255, 0, 0, 0.2);
+}
+
+.grid-cell::after {
+    width: 1px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    border-left: 1px dashed rgba(255, 0, 0, 0.2);
+}
+
+.version {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 12px;
+    color: #666;
+    z-index: 100;
+}
+
+.practice-link {
+    position: absolute;
+    bottom: 40px; 
+    right: 20px;
+    transform: none;
+    padding: 15px 30px;
+    background-color: rgba(231, 229, 229, 0.5);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    text-decoration: none;
+    color: #666;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.practice-link:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.overlay-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 80%;
+    text-align: left;
+}
+
+.overlay-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.overlay-content p {
+    margin: 10px 0;
+    line-height: 1.6;
+    color: #666;
+}

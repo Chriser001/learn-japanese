@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>振假名标注</title>
+    <style>
+        body {
+            font-family: "Noto Sans JP", Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 10px; 
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+            .container {
+            position: relative; /* 确保子元素的定位相对于此容器 */
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+            #outputText {
+            position: relative; /* 确保子元素的定位相对于此容器 */
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            line-height: 2;
+            font-size: 18px;
+            color: #2c3e50;
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+        textarea {
+            width: calc(100% - 30px);
+            height: 120px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 16px;
+            resize: vertical;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .textarea-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .clear-button, .paste-button {
+            position: absolute;
+            background: none;
+            border: none;
+            font-size: 35px;
+            cursor: pointer;
+            padding: 5px;
+            width: auto;
+            margin: 0;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .clear-button {
+            right: 0px;
+            bottom: -30px;
+        }
+
+        .paste-button {
+            left: 0px;
+            bottom: -30px;
+        }
+
+        .clear-button:hover, .paste-button:hover {
+            opacity: 1;
+            transform: none;
+            background: none;
+        }
+
+        .textarea-collapsed {
+            height: 3.2em !important;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+        }
+        button {
+            display: block;
+            width: 200px;
+            margin: 0 auto 20px;
+            padding: 12px 25px;
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #357abd;
+            transform: translateY(-1px);
+        }
+        ruby {
+            ruby-position: over;
+            ruby-align: center;
+            font-size: 18px;
+        }
+        rt {
+            font-size: 10.8px;
+            color: #666;
+            letter-spacing: 0.05em;
+        }
+        #status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        .version {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+            z-index: 100;
+        }
+        .font-size-control {
+            position: absolute; /* 相对于 .container 定位 */
+            top: 10px; /* 距离顶部的距离 */
+            right: 10px; /* 距离右侧的距离 */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+
+        .font-size-control span {
+            font-size: 15px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .font-size-control button {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            margin: 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #dcdcdc;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            line-height: 1;
+        }
+
+        .font-size-control button:hover {
+            background-color: #4a90e2;
+            color: #fff;
+            border-color: #4a90e2;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>振假名标注</h1>
+        <div class="textarea-container">
+            <textarea id="inputText" placeholder="请输入日文文本..."></textarea>
+            <button class="paste-button" id="pasteButton">📋</button>
+            <button class="clear-button" id="clearButton">🗑</button>
+        </div>
+        <button id="processButton" disabled>初始化中</button>
+        <div class="font-size-control">
+            <span>あぁ</span>
+            <button id="increase-font">+</button>
+            <button id="decrease-font">-</button>
+        </div>
+        <div id="outputText"></div>
+        <div class="version">
+            <a href="https://github.com/takuyaa/kuromoji.js" target="_blank" style="color: #666; text-decoration: none; margin-right: 10px;">kuromoji</a>
+            <span id="version-number" style="cursor: pointer;">ver.0.0.12</span>
+        </div>
+    </div>
+    
+    <!-- 添加状态条 -->
+    <div id="status-bar">正在加载词典...</div>
+
+    <script src="https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/build/kuromoji.js"></script>
+    <script>
+        // 检查localStorage中的振假名内容
+        function checkStoredContent() {
+            const storedData = localStorage.getItem('furiganaContent');
+            if (storedData) {
+                try {
+                    const { content, timestamp } = JSON.parse(storedData);
+                    const now = new Date().getTime();
+                    const oneDayInMs = 24 * 60 * 60 * 1000;
+                    
+                    // 检查是否在1天有效期内
+                    if (now - timestamp <= oneDayInMs) {
+                        document.getElementById('outputText').innerHTML = content;
+                        // 当outputText有内容时，折叠输入框
+                        toggleTextareaHeight(true);
+                    } else {
+                        // 超过1天，清空存储
+                        localStorage.removeItem('furiganaContent');
+                        localStorage.removeItem('furiganaFontSize')
+                    }
+                } catch (e) {
+                    console.error('解析存储的振假名数据时出错:', e);
+                    localStorage.removeItem('furiganaContent');
+                }
+            }
+        }
+
+        // 控制输入框高度的函数
+        function toggleTextareaHeight(collapse = false) {
+            const inputText = document.getElementById('inputText');
+            if (collapse) {
+                inputText.classList.add('textarea-collapsed');
+            } else {
+                inputText.classList.remove('textarea-collapsed');
+            }
+        }
+
+        // 页面加载时检查存储的内容
+        window.addEventListener('load', checkStoredContent);
+
+        // 为版本号添加点击事件
+        document.getElementById('version-number').addEventListener('click', function() {
+            localStorage.removeItem('furiganaContent');
+            console.log('已清空本地存储的振假名内容');
+        });
+
+        // 添加粘贴按钮事件处理
+        document.getElementById('pasteButton').addEventListener('click', async function() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    document.getElementById('inputText').value = text;
+                }
+            } catch (err) {
+                console.error('无法访问剪贴板:', err);
+                alert('无法访问剪贴板，请检查浏览器权限设置');
+            }
+        });
+
+        const statusBar = document.getElementById('status-bar');
+
+        // Kuromoji.js 初始化
+        let tokenizer = null;
+        kuromoji.builder({ 
+            dicPath: "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/"
+        }).build(function (err, _tokenizer) {
+            if (err) {
+                console.error("Kuromoji 初始化失败:", err);
+                statusBar.textContent = "词典加载失败，请刷新页面重试";
+                statusBar.style.backgroundColor = "#dc3545";
+                return;
+            }
+            tokenizer = _tokenizer;
+            // 显示加载完成消息
+            statusBar.textContent = "词典加载完毕！";
+            statusBar.style.backgroundColor = "#28a745";
+            // 启用按钮并更新文本
+            const processButton = document.getElementById('processButton');
+            processButton.disabled = false;
+            processButton.textContent = "添加振假名";
+        
+            // 延迟3秒后隐藏状态条
+            setTimeout(() => {
+                statusBar.style.opacity = "0";
+                setTimeout(() => {
+                    statusBar.style.display = "none";
+                }, 300);
+            }, 3000);
+        
+            // 添加输入框相关的事件处理
+            const inputText = document.getElementById('inputText');
+            const clearButton = document.getElementById('clearButton');
+        
+            // 清空按钮点击事件
+            clearButton.addEventListener('click', () => {
+                inputText.value = '';
+            });
+        
+            // 输入框焦点事件
+            inputText.addEventListener('focus', () => {
+                toggleTextareaHeight(false);
+            });
+
+            // 输入框失去焦点事件
+            inputText.addEventListener('blur', () => {
+                toggleTextareaHeight(true);
+            });
+
+            // 处理按钮点击事件修改
+            document.getElementById('processButton').addEventListener('click', function () {
+                const inputText = document.getElementById('inputText');
+                const text = inputText.value;  // Get the input value
+                if (!text) {
+                    alert("请输入日文文本！");
+                    return;
+                }
+
+                if (!tokenizer) {
+                    alert("词典加载中，请稍后再试...");
+                    return;
+                }
+
+                // 处理完成后折叠输入框
+                toggleTextareaHeight(true);
+                
+                // 按行分割文本并处理
+                const lines = text.split('\n');  // Split the text value, not the element
+                const processedLines = lines.map(line => {
+                    if (!line.trim()) return '\n';
+                    
+                    const tokens = tokenizer.tokenize(line);
+                    return tokens.map(token => {
+                        const surface = token.surface_form;
+                        let reading = token.reading;
+                        
+                        if (reading) {
+                            reading = reading.replace(/[\u30A1-\u30F6]/g, match => 
+                                String.fromCharCode(match.charCodeAt(0) - 0x60)
+                            );
+                        }
+        
+                        if (reading && /[\u4e00-\u9faf]/.test(surface)) {
+                            return `<ruby>${surface}<rt>${reading}</rt></ruby>`;
+                        }
+                        return surface;
+                    }).join('') + '\n';  // 添加换行符
+                });
+        
+                // 连接所有行并保存到localStorage
+                const outputContent = processedLines.join('');
+                document.getElementById('outputText').innerHTML = outputContent;
+                
+                // 保存内容和时间戳到localStorage
+                const storageData = {
+                    content: outputContent,
+                    timestamp: new Date().getTime()
+                };
+                localStorage.setItem('furiganaContent', JSON.stringify(storageData));
+                
+                // 清空输入框内容
+                inputText.value = '';
+
+                // 应用保存的字体大小设置
+                const savedFontSize = parseInt(localStorage.getItem('furiganaFontSize')) || 18;
+                const outputTextElement = document.getElementById('outputText');
+                outputTextElement.style.fontSize = `${savedFontSize}px`;
+                
+                // 更新所有ruby元素的字体大小
+                const rubyElements = outputTextElement.querySelectorAll('ruby');
+                rubyElements.forEach(ruby => {
+                    ruby.style.fontSize = `${savedFontSize}px`;
+                });
+                
+                // 更新所有rt元素的字体大小
+                const rtElements = outputTextElement.querySelectorAll('rt');
+                rtElements.forEach(rt => {
+                    rt.style.fontSize = `${savedFontSize * 0.6}px`;
+                });
+            });
+        });
+
+        // 字体大小调节功能
+        window.addEventListener('load', () => {
+            const outputText = document.getElementById('outputText');
+            const increaseButton = document.getElementById('increase-font');
+            const decreaseButton = document.getElementById('decrease-font');
+            // 从localStorage中获取保存的字体大小，如果没有则使用默认值18
+            let currentFontSize = parseInt(localStorage.getItem('furiganaFontSize')) || 18;
+
+            function updateFontSize() {
+                // 更新主文本容器的字体大小
+                outputText.style.fontSize = `${currentFontSize}px`;
+                
+                // 更新所有ruby元素的字体大小
+                const rubyElements = outputText.querySelectorAll('ruby');
+                rubyElements.forEach(ruby => {
+                    ruby.style.fontSize = `${currentFontSize}px`;
+                });
+                
+                // 更新所有rt元素的字体大小，保持0.6的比例
+                const rtElements = outputText.querySelectorAll('rt');
+                rtElements.forEach(rt => {
+                    rt.style.fontSize = `${currentFontSize * 0.6}px`;
+                });
+            }
+
+            // 初始化字体大小
+            updateFontSize();
+
+            increaseButton.addEventListener('click', () => {
+                if (currentFontSize < 36) { // 设置最大字体大小限制
+                    currentFontSize += 2;
+                    updateFontSize();
+                    // 保存新的字体大小到localStorage
+                    localStorage.setItem('furiganaFontSize', currentFontSize.toString());
+                }
+            });
+
+            decreaseButton.addEventListener('click', () => {
+                if (currentFontSize > 12) { // 设置最小字体大小限制
+                    currentFontSize -= 2;
+                    updateFontSize();
+                    // 保存新的字体大小到localStorage
+                    localStorage.setItem('furiganaFontSize', currentFontSize.toString());
+                }
+            });
+        });
+    </script>
+</body>
+</html>
