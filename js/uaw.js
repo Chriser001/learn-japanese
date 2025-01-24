@@ -1,4 +1,4 @@
-       const canvas = document.getElementById('canvas');
+const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const romajiDisplay = document.getElementById('romaji');
         const kanaHistoryDisplay = document.getElementById('kana-history');
@@ -265,11 +265,19 @@
                 // 使用 Promise 包装语音播放
                 await new Promise((resolve, reject) => {
                     utterance.onend = resolve;
-                    utterance.onerror = reject;
-                    speechSynthesis.speak(utterance);//支援Safari的关键所在？
-                });
+                    utterance.onerror = (event) => {
+                        if (event.error === 'not-allowed') {
+                            console.warn('语音合成需要用户交互触发，请尝试点击按钮或假名来播放。');
+                        } else {
+                            console.error('语音合成错误:', event);
+                        }
+                        reject(event);
+                    };
+                    // 在用户交互事件处理程序中调用
+                    setTimeout(() => speechSynthesis.speak(utterance), 0);
+                }).catch(() => {});
             } catch (error) {
-                console.error('语音合成错误:', error);
+                console.warn('语音合成初始化失败，请确保允许网页使用语音功能。');
             }
         }
 
