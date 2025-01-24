@@ -540,18 +540,18 @@
         let currentIndex = 0;
 
         // 设置历史记录最大长度
-        let maxHistoryLength = window.innerHeight > window.innerWidth ? 6 : 10;
+        let maxHistoryLength = window.innerHeight > window.innerWidth ? 5 : 10;
 
         // 检测设备方向并设置历史记录长度
         function setMaxHistoryLength() {
-            maxHistoryLength = window.innerHeight > window.innerWidth ? 6 : 10;
+            maxHistoryLength = window.innerHeight > window.innerWidth ? 5 : 10;
             // 如果当前历史记录超过新的最大长度，则裁剪
             while (kanaHistory.length > maxHistoryLength) {
                 kanaHistory.shift();
             }
             // 更新显示
             kanaHistoryDisplay.innerHTML = kanaHistory
-                .map(k => `<span class="kana-block">${k}</span>`)
+                .map(k => `<span class="kana-block" onclick="speakKana('${k}')">${k}</span>`)
                 .join('');
         }
 
