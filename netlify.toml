@@ -1,0 +1,59 @@
+[[redirects]]
+from = "/dict/cc.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/cc.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/base.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/base.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/check.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/check.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/tid_map.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/tid_map.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/tid_pos.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/tid_pos.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/tid.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/tid.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/unk_char.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_char.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/unk_compat.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_compat.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/unk_invoke.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_invoke.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/unk_map.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_map.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/unk_pos.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk_pos.dat.gz"
+status = 301
+
+[[redirects]]
+from = "/dict/unk.dat.gz"
+to = "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/unk.dat.gz"
+status = 301
