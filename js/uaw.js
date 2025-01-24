@@ -1,100 +1,17 @@
-
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>假名书写练习</title>
-    <!-- 引入 Noto Sans JP 字体 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/earlyaccess/kokoro.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/earlyaccess/hannari.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/uaw.css">
-</head>
-<body>
-    <div id="romaji"></div>
-    <canvas id="canvas" width="200" height="200"></canvas>
-    <div class="buttons">
-        <button id="speak-again">📢</button>
-        <button id="eraser">❌</button>
-        <button id="next">⭕️</button>
-    </div>
-    <div id="kana-history"></div><!-- 记录最后 10 个假名 -->
-    <a href="/dictation.html" class="practice-link">看音写假名</a> 
-
-    <!-- 齿轮图标 -->
-    <div id="settings-icon">🔧</div>
-
-    <!-- 设置菜单 -->
-    <div id="settings-menu">
-        <div class="settings-section">
-            <div class="settings-section-title">出现模式</div>
-            <div class="inline">
-                <select id="practice-type">
-                    <option value="mixed">混合模式</option>
-                    <option value="hiragana">平假名</option>
-                    <option value="katakana">片假名</option>
-                </select>
-            </div>
-        </div>
-    
-        <div class="settings-section">
-            <div class="settings-section-title">限制模式</div>
-            <div class="inline">
-                <input type="checkbox" id="learning-mode">
-                <label for="learning-mode">启用限制模式</label>
-            </div>
-            <div id="kana-groups-container" style="display: none;">
-
-                <div class="kana-groups">
-                    <!-- 假名分组复选框将通过 JavaScript 动态加载 -->
-                </div>
-            </div>
-        </div>
-
-        <div class="settings-section">
-            <div class="settings-section-title">测试模式</div>
-            <div class="inline">
-                <input type="checkbox" id="test-mode">
-                <label for="test-mode">启用拼读测试</label>
-            </div>
-        </div>
-
-        <div class="settings-section">
-            <div class="settings-section-title">显示设置</div>
-            <div class="inline">
-                <label for="show-romaji">显示罗马音：</label>
-                <input type="checkbox" id="show-romaji" checked>
-            </div>
-            <div class="inline">
-                <label for="speak">朗读假名：</label>
-                <input type="checkbox" id="speak" checked>
-            </div>
-        </div>
-
-        <div class="settings-section">
-            <div class="settings-section-title">字体设置</div>
-            <div class="inline">
-                <label for="font-select">选择字体：</label>
-                <select id="font-select">
-                    <option value="Kokoro">Kokoro</option>
-                    <option value="Hannari">Hannari</option>
-                    <option value="Noto Sans JP">Noto Sans JP</option>
-                </select>
-            </div>
-            <label for="opacity">假名透明度：<span id="opacity-value">20</span>%</label>
-            <input type="range" id="opacity" min="0" max="100" value="20">
-            <div class="inline">
-                <label for="color">假名颜色：</label>
-                <input type="color" id="color" value="#000000">
-            </div>
-        </div>
-    </div>
-    <div class="version">ver.0.2.6</div>
-    <script src="js/uaw.js"></script>
-    <script>
+       const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const romajiDisplay = document.getElementById('romaji');
+        const kanaHistoryDisplay = document.getElementById('kana-history');
+        const settingsIcon = document.getElementById('settings-icon');
+        const settingsMenu = document.getElementById('settings-menu');
+        const practiceTypeSelect = document.getElementById('practice-type');
+        const learningModeCheckbox = document.getElementById('learning-mode');
+        const kanaGroupsContainer = document.getElementById('kana-groups-container');
+        const opacityInput = document.getElementById('opacity');
+        const opacityValue = document.getElementById('opacity-value');
+        const colorInput = document.getElementById('color');
+        const speakCheckbox = document.getElementById('speak');
+        const fontSelect = document.getElementById('font-select');
 
         // 田字格的大小
         const gridSize = 200;
@@ -733,6 +650,3 @@
         showRomajiCheckbox.addEventListener('change', () => {
             displayRomaji(currentKana);
         });
-    </script>
-</body>
-</html>

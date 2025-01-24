@@ -1,0 +1,282 @@
+/* 全局字体设置为 Noto Sans JP */
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: "Kokoro", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+    touch-action: none; /* 禁止默认触摸行为 */
+}
+
+#canvas {
+    border: 1px solid #000;
+    background-color: #fff;
+    margin-bottom: 20px;
+    touch-action: none; /* 禁止默认触摸行为 */
+    cursor: default; /* 修复十字光标问题 */
+}
+
+#settings-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+    z-index: 1000;
+}
+
+.settings-section {
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.settings-section-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.kana-type-options {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;  /* 增加底部间距 */
+}
+
+#kana-history {
+    font-size: 24px;
+    margin: 20px 0;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 800px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#romaji {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.kana-block {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    margin: 4px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    min-width: 30px;
+    min-height: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    font-size: 20px;
+}
+
+.kana-block:hover {
+    background-color: #f8f8f8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.practice-link {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    text-decoration: none;
+    color: #666;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.practice-link:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 版本号 */
+.version {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 12px;
+    color: #666;
+    z-index: 100;
+}
+
+.tooltip {
+    position: absolute;
+    top: 45px;
+    right: 80px;
+    background-color: #333;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -6px;
+    transform: translateY(-50%);
+    border-width: 6px 0 6px 6px;
+    border-style: solid;
+    border-color: transparent transparent transparent #333;
+}
+
+#settings-icon {
+    position: absolute;
+    top: 35px;
+    right: 35px;
+    font-size: 35px;
+    cursor: pointer;
+}
+
+#settings-menu label {
+    display: block;
+}
+
+#settings-menu input[type="range"] {
+    width: 100%;
+}
+
+.inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 32px;
+}
+
+.inline label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    min-height: 24px;
+}
+
+.inline input[type="checkbox"] {
+    margin: 0;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.inline select {
+    padding: 8px 32px 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 14px;
+    color: #333;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.inline select:hover {
+    border-color: #666;
+}
+
+.inline select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+.kana-groups {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+    max-width: 500px;
+}
+
+.kana-groups label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    min-height: 24px;
+}
+
+.kana-groups input[type="checkbox"] {
+    margin: 0;
+    vertical-align: middle;
+}
+
+/* 最近出现的假名提示气泡样式 */
+.romaji-tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+@media (max-width: 600px) {
+    .kana-groups {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
