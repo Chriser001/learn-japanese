@@ -59,12 +59,20 @@ self.addEventListener('fetch', event => {
                         .then(response => {
                             // 处理 301 跳转
                             if (response.redirected) {
-                                const responseToCache = response.clone();
-                                caches.open(DICTIONARY_CACHE)
-                                    .then(cache => {
-                                        cache.put(event.request, responseToCache);
-                                    });
+                                return fetch(response.url).then(finalResponse => {
+                                    const responseToCache = finalResponse.clone();
+                                    caches.open(DICTIONARY_CACHE)
+                                        .then(cache => {
+                                            cache.put(event.request, responseToCache);
+                                        });
+                                    return finalResponse;
+                                });
                             }
+                            const responseToCache = response.clone();
+                            caches.open(DICTIONARY_CACHE)
+                                .then(cache => {
+                                    cache.put(event.request, responseToCache);
+                                });
                             return response;
                         });
                 })
