@@ -1,4 +1,11 @@
+// 在文件顶部声明全局变量
+let currentTool = "pencil";
+let gridContainer;
+
 document.addEventListener("DOMContentLoaded", function() {
+    // 获取 gridContainer 引用
+    gridContainer = document.getElementById("grid-container");
+    
     // 检查是否需要显示浮层
     const lastVisit = localStorage.getItem('lastVisitTime');
     const currentTime = new Date().getTime();
