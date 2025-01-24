@@ -51,7 +51,7 @@ function toggleTextareaHeight(collapse = false) {
 // 加载歌曲列表
 async function loadSongList() {
     try {
-        const response = await fetch('/static/songs.json');
+        const response = await fetch('./static/songs.json');
         const data = await response.json();
         const songSelect = document.getElementById('songSelect');
         
