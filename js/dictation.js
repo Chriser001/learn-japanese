@@ -37,10 +37,6 @@ document.addEventListener("DOMContentLoaded", function() {
             localStorage.setItem('lastVisitTime', currentTime.toString());
         });
     }
-
-    const gridContainer = document.getElementById("grid-container");
-    let currentTool = "pencil";
-
     // 初始化按钮和事件监听
     initializeButtons();
     // 初始化生成田字格
