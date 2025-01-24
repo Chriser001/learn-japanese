@@ -60,7 +60,7 @@ function initializeApp() {
     // Kuromoji.js 初始化
     let tokenizer = null;
     kuromoji.builder({ 
-        dicPath: "https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/"
+        dicPath: "./../dict"
     }).build(function (err, _tokenizer) {
         if (err) {
             console.error("Kuromoji 初始化失败:", err);
