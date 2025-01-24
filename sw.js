@@ -20,7 +20,7 @@ const dictionaryFiles = [
 
 const urlsToCache = [
     '/',
-    '/favicon.ico',
+    'favicon.ico',
     '/index.html',
     '/phonetic.html',
     '/dictation.html',
@@ -31,7 +31,8 @@ const urlsToCache = [
     '/js/phonetic.js',
     '/js/dictation.js',
     '/js/uaw.js',
-    '/js/kuromoji.js'
+    '/js/kuromoji.js',
+    '/img/icon.png',
 ];
 
 // Google Fonts 字体文件
