@@ -8,7 +8,24 @@ function checkStoredContent() {
             const oneDayInMs = 24 * 60 * 60 * 1000;
             
             if (now - timestamp <= oneDayInMs) {
-                document.getElementById('outputText').innerHTML = content;
+                const outputText = document.getElementById('outputText');
+                outputText.innerHTML = content;
+                
+                // 设置字体大小
+                const savedFontSize = parseInt(localStorage.getItem('furiganaFontSize')) || 18;
+                outputText.style.fontSize = `${savedFontSize}px`;
+                
+                // 设置 ruby 和 rt 元素的字体大小
+                const rubyElements = outputText.querySelectorAll('ruby');
+                rubyElements.forEach(ruby => {
+                    ruby.style.fontSize = `${savedFontSize}px`;
+                });
+                
+                const rtElements = outputText.querySelectorAll('rt');
+                rtElements.forEach(rt => {
+                    rt.style.fontSize = `${savedFontSize * 0.6}px`;
+                });
+                
                 toggleTextareaHeight(true);
             } else {
                 localStorage.removeItem('furiganaContent');
