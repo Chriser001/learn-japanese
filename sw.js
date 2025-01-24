@@ -25,47 +25,6 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
     const url = new URL(event.request.url);
-    
-    // 处理词典文件请求
-    if (url.pathname.includes('/dict/')) {
-        event.respondWith(
-            caches.open(DICTIONARY_CACHE)
-                .then(cache => cache.match(event.request))
-                .then(response => {
-                    if (response) {
-                        return response;
-                    }
-
-                    return fetch(event.request)
-                        .then(response => {
-                            if (response.ok) {
-                                const clonedResponse = response.clone();
-                                caches.open(DICTIONARY_CACHE)
-                                    .then(cache => cache.put(event.request, clonedResponse));
-                                return response;
-                            }
-                            
-                            // 如果本地请求失败，尝试从 CDN 获取
-                            const cdnUrl = event.request.url.replace(
-                                /\/dict\//,
-                                'https://cdn.jsdelivr.net/gh/takuyaa/kuromoji.js@master/dict/'
-                            );
-                            return fetch(cdnUrl)
-                                .then(cdnResponse => {
-                                    if (cdnResponse.ok) {
-                                        const clonedResponse = cdnResponse.clone();
-                                        caches.open(DICTIONARY_CACHE)
-                                            .then(cache => cache.put(event.request, clonedResponse));
-                                        return cdnResponse;
-                                    }
-                                    throw new Error('Failed to fetch dictionary');
-                                });
-                        });
-                })
-        );
-        return;
-    }
-
     // 处理其他资源请求
     if (event.request.url.startsWith('chrome-extension://')) {
         return;
