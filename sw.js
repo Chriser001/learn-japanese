@@ -33,6 +33,7 @@ const urlsToCache = [
     '/js/uaw.js',
     '/js/kuromoji.js',
     '/img/icon.png',
+    '/static/songs.json'
 ];
 
 // Google Fonts 字体文件
@@ -52,6 +53,16 @@ self.addEventListener('install', event => {
         ])
     );
 });
+
+// 检查网络连接状态
+async function checkNetworkStatus() {
+    try {
+        const response = await fetch('/ping', { method: 'HEAD' });
+        return response.ok;
+    } catch (error) {
+        return false;
+    }
+}
 
 self.addEventListener('fetch', event => {
     const url = new URL(event.request.url);
@@ -142,13 +153,32 @@ self.addEventListener('fetch', event => {
 
     // 处理其他请求
     event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                if (response) {
-                    return response;
+        (async () => {
+            const cachedResponse = await caches.match(event.request);
+            const isOnline = await checkNetworkStatus();
+
+            // 离线状态直接返回缓存
+            if (!isOnline && cachedResponse) {
+                return cachedResponse;
+            }
+
+            // 在线状态下尝试获取新资源
+            if (isOnline) {
+                try {
+                    const response = await fetch(event.request);
+                    if (response.ok) {
+                        const cache = await caches.open(CACHE_NAME);
+                        await cache.put(event.request, response.clone());
+                        return response;
+                    }
+                } catch (error) {
+                    console.log('Fetch failed, falling back to cache:', error);
                 }
-                return fetch(event.request);
-            })
+            }
+
+            // 如果在线获取失败或离线状态，返回缓存
+            return cachedResponse || new Response('Network error', { status: 504 });
+        })()
     );
 });
 
