@@ -99,6 +99,16 @@ textarea {
     background-color: #fff;
     cursor: pointer;
     transition: all 0.3s ease;
+    width: 8em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.song-select option {
+    white-space: nowrap;
+    width: auto;
+    min-width: 100%;
 }
 
 .song-select:hover {
