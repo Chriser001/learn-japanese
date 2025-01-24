@@ -48,33 +48,54 @@ self.addEventListener('fetch', event => {
     }
 
     // 处理词典文件请求
-    if (url.href.includes('kuromoji.js@master/dict/')) {
+    if (url.href.includes('kuromoji.js@master/dict/') || url.pathname.startsWith('/dict/')) {
         event.respondWith(
             caches.match(event.request)
-                .then(response => {
+                .then(async response => {
                     if (response) {
                         return response;
                     }
-                    return fetch(event.request)
-                        .then(response => {
-                            // 处理 301 跳转
-                            if (response.redirected) {
-                                return fetch(response.url).then(finalResponse => {
-                                    const responseToCache = finalResponse.clone();
-                                    caches.open(DICTIONARY_CACHE)
-                                        .then(cache => {
-                                            cache.put(event.request, responseToCache);
-                                        });
-                                    return finalResponse;
-                                });
+                    try {
+                        const fetchResponse = await fetch(event.request);
+                        // 处理 301 跳转
+                        if (fetchResponse.redirected) {
+                            const finalResponse = await fetch(fetchResponse.url);
+                            if (!finalResponse.ok) {
+                                throw new Error(`HTTP error! status: ${finalResponse.status}`);
                             }
-                            const responseToCache = response.clone();
-                            caches.open(DICTIONARY_CACHE)
-                                .then(cache => {
-                                    cache.put(event.request, responseToCache);
-                                });
-                            return response;
+                            const responseToCache = finalResponse.clone();
+                            const cache = await caches.open(DICTIONARY_CACHE);
+                            // 同时缓存原始请求和重定向后的请求
+                            await Promise.all([
+                                cache.put(event.request, responseToCache.clone()),
+                                cache.put(new Request(fetchResponse.url), responseToCache)
+                            ]);
+                            return finalResponse;
+                        }
+                        if (!fetchResponse.ok) {
+                            throw new Error(`HTTP error! status: ${fetchResponse.status}`);
+                        }
+                        const responseToCache = fetchResponse.clone();
+                        const cache = await caches.open(DICTIONARY_CACHE);
+                        await cache.put(event.request, responseToCache);
+                        return fetchResponse;
+                    } catch (error) {
+                        console.error('Fetching dictionary file failed:', error);
+                        // 尝试从缓存中获取其他版本
+                        const cache = await caches.open(DICTIONARY_CACHE);
+                        const cachedFiles = await cache.keys();
+                        // 同时检查原始路径和 CDN 路径
+                        const matchingFile = cachedFiles.find(req => {
+                            const reqUrl = new URL(req.url);
+                            const fileName = url.pathname.split('/').pop();
+                            return reqUrl.pathname.endsWith(fileName) || 
+                                   req.url.includes(`kuromoji.js@master/dict/${fileName}`);
                         });
+                        if (matchingFile) {
+                            return cache.match(matchingFile);
+                        }
+                        throw error;
+                    }
                 })
         );
         return;
