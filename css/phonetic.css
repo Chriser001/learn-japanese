@@ -88,6 +88,29 @@ textarea {
     height: 3.2em !important;
 }
 
+.song-select {
+    position: absolute;
+    left: 50px;
+    bottom: -30px;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.song-select:hover {
+    border-color: #4a90e2;
+}
+
+.song-select:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
 textarea:focus {
     outline: none;
     border-color: #4a90e2;

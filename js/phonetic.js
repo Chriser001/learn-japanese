@@ -48,10 +48,43 @@ function toggleTextareaHeight(collapse = false) {
     }
 }
 
+// 加载歌曲列表
+async function loadSongList() {
+    try {
+        const response = await fetch('/static/songs.json');
+        const data = await response.json();
+        const songSelect = document.getElementById('songSelect');
+        
+        data.songs.forEach(song => {
+            const option = document.createElement('option');
+            option.value = song.title;
+            option.textContent = `${song.title} - ${song.artist}`;
+            songSelect.appendChild(option);
+        });
+
+        // 添加歌曲选择事件监听
+        songSelect.addEventListener('change', function() {
+            const selectedTitle = this.value;
+            if (!selectedTitle) return;
+
+            const selectedSong = data.songs.find(song => song.title === selectedTitle);
+            if (selectedSong) {
+                const lyrics = selectedSong.lyrics.join('\n');
+                document.getElementById('inputText').value = lyrics;
+            }
+        });
+    } catch (error) {
+        console.error('加载歌曲列表失败:', error);
+    }
+}
+
 // 初始化事件监听器和功能
 function initializeApp() {
     // 页面加载时检查存储的内容
-    window.addEventListener('load', checkStoredContent);
+    window.addEventListener('load', () => {
+        checkStoredContent();
+        loadSongList(); // 加载歌曲列表
+    });
 
     // 为版本号添加点击事件
     document.getElementById('version-number').addEventListener('click', function() {
