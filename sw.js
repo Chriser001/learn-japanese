@@ -1,5 +1,6 @@
 const CACHE_NAME = 'japanese-learning-cache-v1';
 const DICTIONARY_CACHE = 'dictionary-cache-v1';
+const FONTS_CACHE = 'fonts-cache-v1';
 
 // 词典文件列表
 const dictionaryFiles = [
@@ -19,6 +20,7 @@ const dictionaryFiles = [
 
 const urlsToCache = [
     '/',
+    '/favicon.ico',
     '/index.html',
     '/phonetic.html',
     '/dictation.html',
@@ -32,10 +34,21 @@ const urlsToCache = [
     '/js/kuromoji.js'
 ];
 
+// Google Fonts 字体文件
+const fontUrlsToCache = [
+    'https://fonts.googleapis.com/earlyaccess/kokoro.css',
+    'https://fonts.googleapis.com/earlyaccess/hannari.css',
+    'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200&display=swap'
+];
+
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(urlsToCache))
+        Promise.all([
+            caches.open(CACHE_NAME)
+                .then(cache => cache.addAll(urlsToCache)),
+            caches.open(FONTS_CACHE)
+                .then(cache => cache.addAll(fontUrlsToCache))
+        ])
     );
 });
 
@@ -44,6 +57,31 @@ self.addEventListener('fetch', event => {
 
     // 处理 chrome-extension 请求
     if (event.request.url.startsWith('chrome-extension://')) {
+        return;
+    }
+
+    // 处理 Google Fonts 请求
+    if (event.request.url.includes('fonts.googleapis.com') || 
+        event.request.url.includes('fonts.gstatic.com')) {
+        event.respondWith(
+            caches.match(event.request)
+                .then(response => {
+                    if (response) {
+                        return response;
+                    }
+                    return fetch(event.request).then(response => {
+                        if (!response || response.status !== 200) {
+                            return response;
+                        }
+                        const responseToCache = response.clone();
+                        caches.open(FONTS_CACHE)
+                            .then(cache => {
+                                cache.put(event.request, responseToCache);
+                            });
+                        return response;
+                    });
+                })
+        );
         return;
     }
 
@@ -101,25 +139,14 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // 处理其他资源请求
+    // 处理其他请求
     event.respondWith(
         caches.match(event.request)
             .then(response => {
                 if (response) {
                     return response;
                 }
-                return fetch(event.request)
-                    .then(response => {
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
-                        const responseToCache = response.clone();
-                        caches.open(CACHE_NAME)
-                            .then(cache => {
-                                cache.put(event.request, responseToCache);
-                            });
-                        return response;
-                    });
+                return fetch(event.request);
             })
     );
 });
@@ -130,7 +157,7 @@ self.addEventListener('activate', event => {
             caches.keys().then(cacheNames => {
                 return Promise.all(
                     cacheNames.map(cacheName => {
-                        if (cacheName !== CACHE_NAME && cacheName !== DICTIONARY_CACHE) {
+                        if (cacheName !== CACHE_NAME && cacheName !== DICTIONARY_CACHE && cacheName !== FONTS_CACHE) {
                             return caches.delete(cacheName);
                         }
                     })
